@@ -29,8 +29,9 @@ RUN useradd -m -u $USERID -g $USERGID $USERNAME
 # since it constrains the portability of the application.
 RUN apt -y update -qq && apt -y upgrade && \
 	DEBIAN_FRONTEND=noninteractive apt -y install \
-	software-properties-common vim && \
-	apt install -y python3 python3-pip python3-scipy python3-h5py && \
+	software-properties-common vim \
+	python3 python3-bitarray python3-nose python3-numpy python3-pandas \
+	python3-pip python3-pybedtools python3-scipy python3-h5py && \
 	update-alternatives --install /usr/bin/python python \
                  /usr/bin/python3 1
 
