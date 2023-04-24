@@ -17,7 +17,7 @@ ENV USERNAME=${USERNAME:-nouser} \
 # match the building user. This will allow output only where the building
 # user has write permissions
 RUN groupadd -g $USERGID $USERGNAME && \
-	useradd -m -u $USERID -g $USERGID $USERNAME && \
+	useradd -m -u $USERID -g $USERGID -g "users" $USERNAME && \
 	adduser $USERNAME $USERGNAME
 
 # Install OS updates, security fixes and utils, generic app dependencies
@@ -31,20 +31,17 @@ RUN groupadd -g $USERGID $USERGNAME && \
 RUN apt -y update -qq && apt -y upgrade && \
 	DEBIAN_FRONTEND=noninteractive apt -y install \
 	software-properties-common vim \
-	python3 python3-bitarray python3-nose python3-numpy python3-pandas \
-	python3-pip python3-pybedtools python3-scipy python3-h5py && \
+	python3 python3-bitarray python3-nose python3-numpy \
+	python3-pandas python3-pip python3-pybedtools \
+	python3-scipy python3-h5py && \
 	update-alternatives --install /usr/bin/python python \
                  /usr/bin/python3 1
 
-#--install needs <link> <name> <path> <priority>
 WORKDIR /app
 
-# Put the code into a subdir, so we don't copy the Makefile and 
-# Dockerfile into the container, they are not needed here.
-COPY src/ .
 RUN chown -R $USERNAME:$USERGID /app
 
 # we map the user owning the image so permissions for any mapped 
 # input/output paths set by the user will work correctly
 USER $USERNAME
-CMD python
+ENTRYPOINT [ "python" ]
