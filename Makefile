@@ -17,13 +17,19 @@ DOCKER_BASE= python-base\:$(DOCKER_TAG)
 DOCKER_IMAGES := $(TOOLS:=\:$(DOCKER_TAG))
 SIF_IMAGES := $(TOOLS:=\:$(DOCKER_TAG).sif)
 
+OS_VER_LEGACY ?= 18.04
+LEGACY_TOOLS := annopred
+DOCKER_BASE_LEGACY= python-base-$(OS_VER_LEGACY)\:$(DOCKER_TAG)
+DOCKER_IMAGES_LEGACY := $(LEGACY_TOOLS:=\:$(DOCKER_TAG))
+SIF_IMAGES_LEGACY := $(LEGACY_TOOLS:=\:$(DOCKER_TAG).sif)
+
 .PHONY: clean docker test $(DOCKER_IMAGES) $(TOOLS)
 
 all: docker apptainer test
 
 help:
 	@echo "Targets: all clean test"
-	@echo "         docker docker_clean docker_test docker_release"
+	@echo "         docker docker_clean docker_test docker_release docker_legacy"
 	@echo "         apptainer apptainer_clean apptainer_test"
 	@echo
 	@echo "Docker containers:\n$(DOCKER_IMAGES)"
@@ -73,6 +79,26 @@ docker_release: $(DOCKER_IMAGES)
 	for f in $(DOCKER_IMAGES); do \
 		docker push $(IMAGE_REPOSITORY)/$(DOCKER_IMAGE_BASE)/$$f; \
 	done
+
+docker_legacy: $(DOCKER_BASE_LEGACY) $(LEGACY_TOOLS)
+
+$(DOCKER_BASE_LEGACY):
+	@echo "Building Docker base container $@"
+	@docker build \
+		-t $(DOCKER_IMAGE_BASE)/$(DOCKER_BASE_LEGACY) \
+		$(DOCKER_BUILD_ARGS) \
+		--build-arg BASE_IMAGE=$(OS_BASE):$(OS_VER_LEGACY) \
+		.
+
+$(LEGACY_TOOLS):
+	@echo "Building Docker container $(DOCKER_IMAGE_BASE)/$@:$(DOCKER_TAG)"
+	@docker build \
+		-t $(DOCKER_IMAGE_BASE)/$@:$(DOCKER_TAG) \
+		$(DOCKER_BUILD_ARGS) \
+		-f ./Dockerfile.$@ \
+		--build-arg BASE_IMAGE=$(DOCKER_IMAGE_BASE)/$(DOCKER_BASE_LEGACY) \
+		--build-arg RUNCMD="$@" \
+		.
 
 # Apptainer
 apptainer_clean:
