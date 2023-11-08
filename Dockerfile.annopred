@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: GPL-2.0
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+ARG RUNCMD
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    build-essential \
+    git \
+    wget \
+    python \
+    python-h5py \
+    python-scipy \
+    python-numpy \
+    python-sklearn \
+    python-pandas \
+    python-bitarray \
+    python-pysam \
+    python-pip \
+    zlib1g-dev
+
+RUN pip install pybedtools
+RUN pip install plinkio
+
+WORKDIR /src
+RUN git clone https://github.com/yiminghu/AnnoPred.git
+RUN git clone https://github.com/bulik/ldsc.git
+WORKDIR /src/AnnoPred
+RUN echo "LDSC_path /src/ldsc" > LDSC.config
+
+WORKDIR /app
