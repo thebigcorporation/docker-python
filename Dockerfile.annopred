@@ -29,4 +29,11 @@ RUN git clone https://github.com/bulik/ldsc.git
 WORKDIR /src/AnnoPred
 RUN echo "LDSC_path /src/ldsc" > LDSC.config
 
+# Source code will be root/root, so to allow for adding
+# the required ref files to the AnnoPred directory, we need
+# to change the permissions. Unfortunately, the 'ref' directory
+# is too large to place into the container, but MUST be in the same
+# directory as the AnnoPred source code.
+RUN chmod 777 .
+
 WORKDIR /app
