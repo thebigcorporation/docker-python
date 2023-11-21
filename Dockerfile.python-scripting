@@ -12,4 +12,8 @@ RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # install wheel first for package building :
 RUN pip install wheel && \
-    pip install polars[all]
+    pip install pandas[excel] && \
+    pip install plotly && \
+    pip install polars[all] && \
+    pip install scikit-allel && \
+    pip install seaborn
