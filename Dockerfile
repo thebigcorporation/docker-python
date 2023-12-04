@@ -4,4 +4,7 @@ FROM $BASE_IMAGE
 
 RUN apt -y update -qq && apt -y upgrade && \
     DEBIAN_FRONTEND=noninteractive apt -y install \
-	python3 python3-venv
+	curl ca-certificates \
+	python3 python3-venv && \
+	update-alternatives --install /usr/bin/python python \
+		/usr/bin/python3 1
