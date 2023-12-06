@@ -3,7 +3,7 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 RUN apt -y update -qq && apt -y upgrade && \
-    DEBIAN_FRONTEND=noninteractive apt -y install \
+	DEBIAN_FRONTEND=noninteractive apt -y install \
 	curl ca-certificates \
 	python3 python3-venv && \
 	update-alternatives --install /usr/bin/python python \
