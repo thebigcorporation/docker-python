@@ -2,7 +2,7 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE as builder
 
-ARG RUNCMD
+ARG RUN_CMD
 
 # in Ubuntu 23.04 and later, an error is now passed for attempting to
 # globally install packages with an external package manager like pip.
@@ -10,10 +10,10 @@ ARG RUNCMD
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
 # install wheel first for package building :
-RUN pip install wheel && \
-    pip install pandas[excel] && \
-    pip install plotly && \
-    pip install polars[all] && \
-    pip install scikit-allel && \
-    pip install seaborn
+RUN pip install wheel pandas[excel] plotly polars[all] scikit-allel seaborn
+
+ARG TEST="/test.sh"
+COPY src/test/$RUN_CMD.sh ${TEST}
+RUN chmod ugo+rx ${TEST}
