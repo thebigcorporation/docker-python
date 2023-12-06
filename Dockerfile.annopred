@@ -36,7 +36,4 @@ RUN echo "LDSC_path /src/ldsc" > LDSC.config
 RUN chmod 777 .
 
 ARG TEST="/test.sh"
-COPY src/test/$RUN_CMD.sh ${TEST}
-RUN chmod ugo+rx ${TEST}
-
-WORKDIR /app
+COPY --chmod=0555 src/test/$RUN_CMD.sh ${TEST}
