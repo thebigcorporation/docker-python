@@ -2,6 +2,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+LABEL org.opencontainers.image.description="bare bones Python 3 container"
+
 ARG RUN_CMD
 
 ARG TEST="/test.sh"

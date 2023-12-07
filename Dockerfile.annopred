@@ -2,6 +2,8 @@
 ARG BASE_IMAGE
 FROM ubuntu:18.04
 
+LABEL org.opencontainers.image.description="From: https://github.com/yiminghu/AnnoPred"
+
 ARG RUN_CMD
 
 RUN apt -y update && apt -y upgrade && \

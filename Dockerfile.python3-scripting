@@ -2,6 +2,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE as builder
 
+LABEL org.opencontainers.image.description="Python 3 with venv suitable for running comon Python scripts"
+
 ARG RUN_CMD
 
 # in Ubuntu 23.04 and later, an error is now passed for attempting to
