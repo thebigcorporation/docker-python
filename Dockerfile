@@ -2,6 +2,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+LABEL org.opencontainers.image.description="Python 3 common base image"
+
 RUN apt -y update -qq && apt -y upgrade && \
 	DEBIAN_FRONTEND=noninteractive apt -y install \
 	ca-certificates curl \
